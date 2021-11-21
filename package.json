@@ -1,0 +1,57 @@
+{
+  "name": "my-webpack-project",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@babel/core": "7.12.13",
+    "@babel/preset-env": "7.12.13",
+    "@babel/preset-react": "7.12.13",
+    "@webpack-cli/init": "^1.1.3",
+    "babel-eslint": "10.1.0",
+    "babel-loader": "8.2.2",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "css-loader": "^6.5.1",
+    "eslint": "7.19.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jsx-a11y": "6.4.1",
+    "eslint-plugin-react": "7.22.0",
+    "eslint-plugin-react-hooks": "4.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.1",
+    "vue-loader": "^15.9.8",
+    "vue-template-compiler": "^2.6.14",
+    "webpack": "^5.21.2",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^4.5.0",
+    "workbox-webpack-plugin": "^6.4.1"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "moment": "2.29.1",
+    "prop-types": "15.7.2",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-infinite-scroll-component": "6.0.0",
+    "vue": "^2.6.14"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "description": "My webpack project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allenh9999/TheNormanDoorsProject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allenh9999/TheNormanDoorsProject/issues"
+  },
+  "homepage": "https://github.com/allenh9999/TheNormanDoorsProject#readme"
+}
