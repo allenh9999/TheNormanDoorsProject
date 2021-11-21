@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name="NormanDoors",
+    name="WorkoutBuddies",
     version="0.1.0",
-    packages=["NormanDoors"],
+    packages=["WorkoutBuddies"],
     include_package_data=True,
     install_requires=[
         'Flask',

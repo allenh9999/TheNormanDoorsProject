@@ -25,7 +25,7 @@ const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
   mode: 'development',
-  entry: './NormanDoors/js/main.js',
+  entry: './WorkoutBuddies/js/main.js',
 
   plugins: [
    new webpack.ProgressPlugin(), 
@@ -74,7 +74,7 @@ module.exports = {
   },
   
   output: {
-    path: path.join(__dirname, '/NormanDoors/static/js/'),
+    path: path.join(__dirname, '/WorkoutBuddies/static/js/'),
     filename: 'bundle.js',
   },
 }
