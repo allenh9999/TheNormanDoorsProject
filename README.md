@@ -9,9 +9,8 @@ git commit -m "commit_name.
 
 co-authored-by: author name <author_email>"
 ```
-### Note for Window computers
-You know what? Forget it. I'm going to use WSL instead. This is a massive pain ~ Allen
-### Note for Linux/Mac computers
+## Note for Linux/Mac computers
+### Virtual Environment
 run the following commands:
 ```
 python3 -mvenv env
@@ -22,3 +21,23 @@ To activate the environment, run the following commands:
 ```
 source env/bin/activate
 ```
+### Webpack
+Webpack basically bundles all the js files into one place. To install dependencies, run
+```
+npm ci .
+```
+Then, run 
+```
+npx webpack --watch
+```
+to compile the webpack. Also lmk if you guys want any dependencies or change any names, you need to specificially add it to webpack (Allen)
+### Setting up the shell script
+Run the following command:
+```
+chmod +x bin/run.bin
+```
+to allow running the script. Then, whenever you want to run the server, type in
+```
+./bin/run.bin
+```
+to activate the server. Make sure that the environment is on 
