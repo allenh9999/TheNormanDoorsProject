@@ -1,1 +1,2 @@
 import WorkoutBuddies.views.mainpage
+import WorkoutBuddies.views.feed
