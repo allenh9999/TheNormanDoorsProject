@@ -9,3 +9,16 @@ git commit -m "commit_name.
 
 co-authored-by: author name <author_email>"
 ```
+### Note for Window computers
+You know what? Forget it. I'm going to use WSL instead. This is a massive pain ~ Allen
+### Note for Linux/Mac computers
+run the following commands:
+```
+python3 -mvenv env
+pip install -r requirements.txt
+pip install -e .
+```
+To activate the environment, run the following commands:
+```
+source env/bin/activate
+```
