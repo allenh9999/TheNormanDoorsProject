@@ -1,3 +1,4 @@
+'''A lot of this code template can be found at https://eecs485staff.github.io/eecs485.org/'''
 import flask
 
 app = flask.Flask(__name__)

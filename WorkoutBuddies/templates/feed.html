@@ -7,33 +7,7 @@
       <div id="main">
          <MainMenu name={{name}} style="z-index:10"></MainMenu>
          <MainMenuDivider></MainMenuDivider>
-         <div class="card">
-            <div class="card-body" style="overflow-x: auto; display: inline-block; white-space: nowrap">
-               <span style="margin-left: 5px; margin-right: 5px;">Groups selected:</span>
-               <button type="button" class="btn btn-primary">493 Gainz</button>
-               <button type="button" class="btn btn-outline-primary">493 Excercise</button>
-            </div>
-         </div>
-         <div style="height: 20px;"></div>
-         <div class="card" style="width: 90%; margin-left: auto; margin-right: auto">
-            <div class="card-header">
-               <span>Joe went swimming for 20 minutes on September 2021</span>
-               <span style="float: right;">390 calories</span>
-            </div>
-            <div class="card-body">
-               I went swimming for 20 minutes in the CCRB, freestyle.
-            </div>
-         </div>
-         <div style="height: 20px;"></div>
-         <div class="card" style="width: 90%; margin-left: auto; margin-right: auto">
-            <div class="card-header">
-               <span>Alex ran for 20 minutes on September 2021</span>
-               <span style="float: right;">180 calories</span>
-            </div>
-            <div class="card-body">
-               800m warmup, 400m cooldown at 10 minute pace. Ran for 2 miles for workout.
-            </div>
-         </div>
+         <Feed name={{name}}></Feed>
       </div>
       <script type="text/javascript" src="{{ url_for('static', filename='js/bundle.js') }}"></script>
    </body>
