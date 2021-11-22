@@ -4,4 +4,5 @@ import pathlib
 APPLICATION_ROOT = '/'
 
 # Secret key for encrypting cookies
+SECRET_KEY = b'A\x92\x06\xd7Y\xc7\xecI\xe7\xb3t:6\x8f\xe5\x9e\x98#\xa5S\x8a\x99\xc9\xe8' # change if deploying to server
 SESSION_COOKIE_NAME = 'login'
