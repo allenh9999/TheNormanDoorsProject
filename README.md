@@ -34,10 +34,19 @@ to compile the webpack. Also lmk if you guys want any dependencies or change any
 ### Setting up the shell script
 Run the following command:
 ```
-chmod +x bin/run.bin
+chmod +x bin/run.sh
 ```
 to allow running the script. Then, whenever you want to run the server, type in
 ```
-./bin/run.bin
+./bin/run.sh
 ```
 to activate the server. Make sure that the environment is on 
+### SQL 
+Run the following command:
+```
+chmod +x bin/db.sh
+```
+to allow running the script. To reset or initialize the sql library, type in 
+```
+./bin/db.sh
+```
