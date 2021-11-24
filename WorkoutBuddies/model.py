@@ -1,6 +1,9 @@
 '''A lot of this code template can be found at https://eecs485staff.github.io/eecs485.org/'''
+import sqlite3
+import flask
+import WorkoutBuddies
 
-def db():
+def get_db():
     if 'sqlite_db' not in flask.g:
         flask.g.sqlite_db = sqlite3.connect(str(WorkoutBuddies.app.config['DATABASE_FILENAME']))
         flask.g.sqlite_db.row_factory = lambda cursor, row : {col[0]: row[idx] for idx, col in enumerate(cursor.description)}

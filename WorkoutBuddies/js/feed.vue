@@ -16,33 +16,46 @@
          </div>
          <div class="card-body">
             <span>I went </span>
-            <input type="text" placeholder="exercise" style="width: 240px" id="exercise_type"></input>
+            <span style="display: inline-grid">
+               <input type="text" placeholder="exercise" style="width: 240px" id="exercise_type"></input>
+               <p class="error" v-if="display_exercise_missing">The exercise field is blank</p>
+            </span>
             <span> for </span>
-            <input type="number" placeholder="time" style="width: 60px" id="exercise_time"></input>
-            <span> minutes. </span>
+            <span style="display: inline-grid">
+               <span>
+                  <input type="number" placeholder="time" style="width: 60px" id="exercise_time" min="1"></input>
+                  <span> minutes. </span>
+               </span>
+               <p class="error" v-if="display_time_missing">The time field is blank</p>
+            </span>
             <p>
                <span>Do you want to describe your workout?</span>
             </p>
-            <textarea style="width: 400px" id="exercise_description"></textarea>
+            <textarea style="width: 400px" id="exercise_description" placeholder="Describe what you accomplished in this workout."></textarea>
             <p></p>
             <button type="button" class="btn btn-outline-primary" @click="sharePost()">Share!</button>
          </div>
       </div>
       <template v-for="post in posts">
-         <div style="height: 20px;"></div>
-         <div class="card" style="width: 90%; margin-left: auto; margin-right: auto">
-            <div class="card-header">
-               <span>{{post.name}} went {{post.exercise}} for {{post.time}} minutes on {{post.date}}</span>
-               <span style="float: right;">{{post.calories}} calories</span>
+         <template v-if="post.groups.filter(group => selected_groups.has(group)).length != 0">
+            <div style="height: 20px;"></div>
+            <div class="card" style="width: 90%; margin-left: auto; margin-right: auto">
+               <div class="card-header">
+                  <span>{{post.name}} went {{post.exercise}} for {{post.time}} {{post.date}}</span>
+                  <span style="float: right;">{{post.calories}} calories</span>
+               </div>
+               <div class="card-body">
+                  {{post.description}}
+               </div>
             </div>
-            <div class="card-body">
-               {{post.body}}
-            </div>
-         </div>
+         </template>
       </template>
       <div style="height: 20px;"></div>
-      <div v-if="share_successful" class="alert alert-success" style="width: 200px; position: fixed; bottom: 0px; margin-left: 50%; transform: translate(-100px, 0px)">
+      <div v-if="share_successful" class="alert alert-success" style="width: 200px; position: fixed; bottom: 0px; margin-left: 50%; transform: translate(-100px, 0px); text-align: center">
          Successfully shared!
+      </div>
+      <div v-if="display_fields_missing" class="alert alert-danger" style="width: 300px; position: fixed; bottom: 0px; margin-left: 50%; transform: translate(-150px, 0px); text-align: center">
+         Some of the required fields are blank.
       </div>
    </div>
 </template>
@@ -51,42 +64,68 @@
 module.exports = {
    data: function() {
       return {
-         posts : [
-            {
-               name: "Joe",
-               exercise: "swimming",
-               time: 20,
-               date: "11/21/2021",
-               calories: 390,
-               body: "I went swimming for 20 minutes in the CCRB, freestyle."
-            },
-            {
-               name: "Alex",
-               exercise: "running",
-               time: 20,
-               date: "11/20/2021",
-               calories: 180,
-               body: "800m warmup, 400m cooldown at 10 minute pace. Ran for 2 miles for workout."
-            }
-         ],
+         posts : [],
          share_successful: false,
-         groups: ['493 Gainz', '493 Exercise'],
-         selected_groups: new Set([ '493 Gainz' ]),
+         groups: [],
+         selected_groups: new Set(),
+         display_exercise_missing: false,
+         display_time_missing: false,
+         display_fields_missing: false,
       };
    },
    props: ['name'],
    methods: {
+      
+      getPosts() {
+         fetch("/api/feed/", { credentials: 'same-origin' })
+         .then((response) => {
+           if (!response.ok) throw Error(response.statusText);
+           return response.json();
+         })
+         .then((data) => {
+            this.selected_groups = new Set(data.groups);
+            this.posts = data.posts;
+            this.groups = data.groups;
+         })
+         .catch((error) => console.log(error));
+      },
+      
       sharePost() {
-         this.posts.unshift({
-            name: this.name,
-            exercise: $(exercise_type)[0].value,
-            time: $(exercise_time)[0].value,
-            date: new Date().toLocaleDateString(),
-            calories: $(exercise_time)[0].value * 10,
-            body: $(exercise_description)[0].value
-         });
-         this.share_successful = true;
-         setTimeout(() => this.share_successful = false, 3000);
+         if ($(exercise_type)[0].value != "" && $(exercise_time)[0].value != "") {
+            let sendData = {
+               exercise: $(exercise_type)[0].value,
+               time: $(exercise_time)[0].value,
+               description: $(exercise_description)[0].value == "" ? "No description." : $(exercise_description)[0].value,
+            };
+            fetch("/api/post/", { method: "POST", credentials: 'same-origin', body: JSON.stringify(sendData) })
+            .then((response) => {
+              if (!response.ok) throw Error(response.statusText);
+              return response.json();
+            })
+            .then((data) => {
+               this.getPosts();
+               $(exercise_type)[0].value = "";
+               $(exercise_time)[0].value = "";
+               $(exercise_description)[0].value = "";
+               this.share_successful = true;
+               setTimeout(() => this.share_successful = false, 3000);
+            });
+            this.display_exercise_missing = false;
+            this.display_time_missing = false;
+         } else {
+            if ($(exercise_type)[0].value == "") {
+               this.display_exercise_missing = true;
+            } else {
+               this.display_exercise_missing = false;
+            }
+            if ($(exercise_time)[0].value == "") {
+               this.display_time_missing = true;
+            } else {
+               this.display_time_missing = false;
+            }
+            this.display_fields_missing = true;
+            setTimeout(() => this.display_fields_missing = false, 3000);
+         }
       },
       
       setGroup(group) {
@@ -96,12 +135,37 @@ module.exports = {
             this.selected_groups.add(group);
          }
          this.$forceUpdate();
-      }
+      },
    },
    created: function() {
+      $(document).ready(() => {
+         $(exercise_time).on("keypress", (event) => {
+            if (event.which < 48 || event.which > 57) {
+               event.preventDefault();
+            }
+         });
+         $(exercise_time).on("cut paste drag", (event) => event.preventDefault());
+         this.getPosts();
+      });
    }
 };
 </script>
 
 <style scoped>
+
+.error {
+   color: red;
+   font-size: 0.7em;
+   margin: 0px;
+}
+
+.btn-primary:hover {
+   color: #c1d9fd;
+   background-color: #4991fd;
+}
+
+.btn-outline-primary:hover {
+   color: #4991fd;
+   background-color: #c1d9fd;
+}
 </style>

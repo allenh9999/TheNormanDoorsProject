@@ -1,7 +1,7 @@
 <template>
-   <div style="background:lime; position: fixed; top: 0; left: 0; right: 0; display: inline-block; padding: 10px;">
+   <div style="background:black; position: fixed; top: 0; left: 0; right: 0; display: inline-block; padding: 10px;">
       <a class="nav-link main_text" href="/">Workout Buddies</a>
-      <p style="color: #0d6efd; float: right; position: relative; padding-right: 5px; padding-top: 0px; margin: 0px;">{{name}}</p>
+      <p style="color: #0d6efd; float: right; position: relative; padding-right: 5px; padding-top: 0px; margin: 0px;">{{displayName}}</p>
    </div>
 </template>
 
@@ -9,9 +9,23 @@
 module.exports = {
    data: function() {
       return {
+         displayName: "",
       };
    },
-   props: ['name']
+   props: ['name'],
+   created: function() {
+      $(document).ready(() => {
+         fetch('/api/name/', { credentials: 'same-origin' })
+         .then((response) => {
+           if (!response.ok) throw Error(response.statusText);
+           return response.json();
+         })
+         .then((data) => {
+            this.displayName = data.firstname;
+         })
+         .catch((error) => console.log(error));
+      });
+   }
 };
 </script>
 

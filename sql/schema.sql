@@ -32,5 +32,5 @@ CREATE TABLE in_group(
    groupname VARCHAR(20) NOT NULL,
    FOREIGN KEY(groupname) REFERENCES groups(name) ON DELETE CASCADE,
    FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE,
-   PRIMARY KEY(username)
+   PRIMARY KEY(username, groupname)
 );
