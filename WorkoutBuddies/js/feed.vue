@@ -265,4 +265,14 @@ module.exports = {
    color: #4991fd;
    background-color: #c1d9fd;
 }
+
+.btn-outline-success:hover {
+   color: #439e73;
+   background-color: #d5ffec;
+}
+
+.btn-success:hover {
+   color: #d5ffec;
+   background-color: #439e73;
+}
 </style>
