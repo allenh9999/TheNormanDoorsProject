@@ -7,6 +7,20 @@
                <button type="button" class="btn btn-primary" v-if="selected_groups.has(group)" style="margin-right: 5px;" @click="setGroup(group)">{{group}}</button>
                <button type="button" class="btn btn-outline-primary" style="margin-right: 5px;" @click="setGroup(group)" v-else>{{group}}</button>
             </template>
+            <button type="button" class="btn btn-success" v-if="add_group" @click="add_group = !add_group;">Add new group</button>
+            <button type="button" class="btn btn-outline-success" @click="add_group = !add_group; create_new_group = false; add_existing_group = false;" v-else>Add new group</button>
+         </div>
+      </div>
+      <div class="card" v-if="add_group">
+         <div class="card-body">
+            <button type="button" class="btn btn-success" v-if="create_new_group" @click="create_new_group = !create_new_group">Create new group</button>
+            <button type="button" class="btn btn-outline-success" v-else @click="create_new_group = !create_new_group; add_existing_group = false;">Create new group</button>
+            <button type="button" class="btn btn-success" v-if="add_existing_group" @click="add_existing_group = !add_existing_group">Add existing group</button>
+            <button type="button" class="btn btn-outline-success" v-else @click="add_existing_group = !add_existing_group; create_new_group = false">Add existing group</button>
+            <div v-if="add_existing_group ^ create_new_group">
+               <span>This action will lead you to a different page. Continue?</span>
+               <button type="button" class="btn btn-outline-success" @click="addNewGroup()">Yes</button>
+            </div>
          </div>
       </div>
       <div style="height: 20px;"></div>
@@ -91,6 +105,9 @@ module.exports = {
          add_exercise: false,
          new_exercise: false,
          error_message: "Some of the required fields are blank.",
+         add_group: false,
+         create_new_group: false,
+         add_existing_group: false,
       };
    },
    props: ['name'],
@@ -207,6 +224,14 @@ module.exports = {
       getBolded(exercise) {
          let exerciseRegEx = new RegExp($(exercise_type)[0].value, 'g');
          return exercise.replace(exerciseRegEx, '<b>' + $(exercise_type)[0].value + '</b>');
+      },
+      
+      addNewGroup() {
+         if (this.add_existing_group) {
+            window.location.href = "/group/add";
+         } else {
+            window.location.href = "/group/create";
+         }
       }
    },
    created: function() {
