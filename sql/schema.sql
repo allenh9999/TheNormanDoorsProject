@@ -7,6 +7,7 @@ CREATE TABLE users(
    email VARCHAR(40) NOT NULL,
    password VARCHAR(256) NOT NULL,
    creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+   weight INTEGER NOT NULL,
    PRIMARY KEY(username)
 );
 
@@ -33,4 +34,10 @@ CREATE TABLE in_group(
    FOREIGN KEY(groupname) REFERENCES groups(name) ON DELETE CASCADE,
    FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE,
    PRIMARY KEY(username, groupname)
+);
+
+CREATE TABLE exercise(
+   name VARCHAR(40) NOT NULL,
+   calRate FLOAT,
+   PRIMARY KEY(name)
 );

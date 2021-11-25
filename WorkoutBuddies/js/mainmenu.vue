@@ -1,7 +1,7 @@
 <template>
    <div style="background:black; position: fixed; top: 0; left: 0; right: 0; display: inline-block; padding: 10px;">
       <a class="nav-link main_text" href="/">Workout Buddies</a>
-      <p style="color: #0d6efd; float: right; position: relative; padding-right: 5px; padding-top: 0px; margin: 0px;">{{displayName}}</p>
+      <a class="nav-link main_text" style="float: right; position: relative; padding-right: 5px; padding-top: 0px; margin: 0px;" :href="'/u/' + name + '/'">{{displayName}}</a>
    </div>
 </template>
 

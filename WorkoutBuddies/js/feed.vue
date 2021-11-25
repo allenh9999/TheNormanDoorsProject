@@ -17,7 +17,12 @@
          <div class="card-body">
             <span>I went </span>
             <span style="display: inline-grid">
-               <input type="text" placeholder="exercise" style="width: 240px" id="exercise_type"></input>
+               <input type="text" placeholder="exercise" :style="exercise_type_style" data-bs-toggle="dropdown" @input="checkExercise()" @blur="exitExercise()" id="exercise_type"></input>
+               <ul class="dropdown-menu" style="display: block; margin-top: 30px; width: 240px" v-if="exercise_visible">
+                  <template v-for="exercise in exercise_type">
+                     <p class="dropdown-item" @click="changeExercise(exercise)" v-html="getBolded(exercise)">{{exercise}}</p>
+                  </template>
+               </ul>
                <p class="error" v-if="display_exercise_missing">The exercise field is blank</p>
             </span>
             <span> for </span>
@@ -28,6 +33,12 @@
                </span>
                <p class="error" v-if="display_time_missing">The time field is blank</p>
             </span>
+            <template v-if="new_exercise">
+               <br/>
+               <span>This is a new exercise in our system. Do you want to add it?</span>
+               <button type="button" class="btn btn-primary" v-if="add_exercise" @click="add_exercise=false">Yes</button>
+               <button type="button" class="btn btn-outline-primary" @click="add_exercise=true" v-else>No</button>
+            </template>
             <p>
                <span>Do you want to describe your workout?</span>
             </p>
@@ -41,7 +52,8 @@
             <div style="height: 20px;"></div>
             <div class="card" style="width: 90%; margin-left: auto; margin-right: auto">
                <div class="card-header">
-                  <span>{{post.name}} went {{post.exercise}} for {{post.time}} {{post.date}}</span>
+                  <a class="nav-link" style="display: inline; padding: 0px;" :href="'/u/' + post.username + '/'">{{post.name}}</a>
+                  <span> went {{post.exercise}} for {{post.time}} {{post.date}}</span>
                   <span style="float: right;">{{post.calories}} calories</span>
                </div>
                <div class="card-body">
@@ -55,7 +67,7 @@
          Successfully shared!
       </div>
       <div v-if="display_fields_missing" class="alert alert-danger" style="width: 300px; position: fixed; bottom: 0px; margin-left: 50%; transform: translate(-150px, 0px); text-align: center">
-         Some of the required fields are blank.
+         {{error_message}}
       </div>
    </div>
 </template>
@@ -71,6 +83,14 @@ module.exports = {
          display_exercise_missing: false,
          display_time_missing: false,
          display_fields_missing: false,
+         exercise_visible: false,
+         exercise_type: [],
+         exercise_type_style: {
+            width: '240px',
+         },
+         add_exercise: false,
+         new_exercise: false,
+         error_message: "Some of the required fields are blank.",
       };
    },
    props: ['name'],
@@ -90,28 +110,42 @@ module.exports = {
          .catch((error) => console.log(error));
       },
       
+      sendPost() {
+         let sendData = {
+            exercise: $(exercise_type)[0].value,
+            time: $(exercise_time)[0].value,
+            description: $(exercise_description)[0].value == "" ? "No description." : $(exercise_description)[0].value,
+         };
+         fetch("/api/post/", { method: "POST", credentials: 'same-origin', body: JSON.stringify(sendData) })
+         .then((response) => {
+           if (!response.ok) throw Error(response.statusText);
+           return response.json();
+         })
+         .then((data) => {
+            this.getPosts();
+            $(exercise_type)[0].value = "";
+            $(exercise_time)[0].value = "";
+            $(exercise_description)[0].value = "";
+            this.share_successful = true;
+            this.display_fields_missing = false;
+            this.exercise_type_style.color = '#000000';
+            setTimeout(() => this.share_successful = false, 6000);
+            this.add_exercise = false;
+            this.new_exercise = false;
+         });
+      },
+      
       sharePost() {
          if ($(exercise_type)[0].value != "" && $(exercise_time)[0].value != "") {
-            let sendData = {
-               exercise: $(exercise_type)[0].value,
-               time: $(exercise_time)[0].value,
-               description: $(exercise_description)[0].value == "" ? "No description." : $(exercise_description)[0].value,
-            };
-            fetch("/api/post/", { method: "POST", credentials: 'same-origin', body: JSON.stringify(sendData) })
-            .then((response) => {
-              if (!response.ok) throw Error(response.statusText);
-              return response.json();
-            })
-            .then((data) => {
-               this.getPosts();
-               $(exercise_type)[0].value = "";
-               $(exercise_time)[0].value = "";
-               $(exercise_description)[0].value = "";
-               this.share_successful = true;
-               setTimeout(() => this.share_successful = false, 3000);
-            });
-            this.display_exercise_missing = false;
-            this.display_time_missing = false;
+            if (this.new_exercise & !this.add_exercise) {
+               this.display_exercise_missing = false;
+               this.display_time_missing = false;
+               this.error_message = "Either select yes or change the exercise.";
+               this.display_fields_missing = true;
+               setTimeout(() => this.display_fields_missing = false, 6000);
+            } else {
+               this.sendPost();
+            }
          } else {
             if ($(exercise_type)[0].value == "") {
                this.display_exercise_missing = true;
@@ -123,6 +157,7 @@ module.exports = {
             } else {
                this.display_time_missing = false;
             }
+            this.error_message = "Some of the required fields are blank.";
             this.display_fields_missing = true;
             setTimeout(() => this.display_fields_missing = false, 3000);
          }
@@ -136,6 +171,43 @@ module.exports = {
          }
          this.$forceUpdate();
       },
+      
+      checkExercise() {
+         fetch("/api/getExercises?query=" + $(exercise_type)[0].value, { method: "GET", credentials: "same-origin" })
+         .then(response => {
+            if (!response.ok) throw Error(response.statusText);
+            return response.json();
+         })
+         .then(data => {
+            this.exercise_type = data.exercises;
+            if (data.exercises.length != 0) {
+               this.exercise_visible = true;
+            } else {
+               this.exercise_visible = false;
+            }
+         });
+         this.new_exercise = false;
+         this.exercise_type_style.color = '#000000';
+      },
+      
+      exitExercise() {
+         setTimeout(() => {
+            this.exercise_visible = false;
+            if (!this.exercise_type.includes($(exercise_type)[0].value) && $(exercise_type)[0].value != "") {
+               this.new_exercise = true;
+            }
+         }, 200);
+      },
+      
+      changeExercise(exercise) {
+         $(exercise_type)[0].value = exercise;
+         this.exercise_type_style.color = '#555555';
+      },
+      
+      getBolded(exercise) {
+         let exerciseRegEx = new RegExp($(exercise_type)[0].value, 'g');
+         return exercise.replace(exerciseRegEx, '<b>' + $(exercise_type)[0].value + '</b>');
+      }
    },
    created: function() {
       $(document).ready(() => {

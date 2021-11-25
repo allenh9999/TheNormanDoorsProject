@@ -5,6 +5,16 @@ import arrow
 def get_groups(username):
     return [group["groupname"] for group in WorkoutBuddies.model.get_db().execute("SELECT groupname FROM in_group WHERE username = ?", (username,)).fetchall()]
 
+def get_calories(exercise, minutes):
+    connection = WorkoutBuddies.model.get_db()
+    calRate = connection.execute("SELECT calRate FROM exercise WHERE name = ?", (exercise,)).fetchall()[0]["calRate"]
+    if calRate == 0:
+        calRate = 0.05
+    username = flask.session["username"]
+    userWeight = connection.execute("SELECT weight FROM users WHERE username = ?", (username,)).fetchall()[0]["weight"]
+    return int(userWeight * minutes * calRate)
+    
+
 @WorkoutBuddies.app.route('/api/feed/', methods=['GET'])
 def get_feed_api():
     if "username" not in flask.session:
@@ -25,7 +35,7 @@ def get_feed_api():
         if post["username"] not in usernameGroups:
             usernameGroups[post["username"]] = get_groups(post["username"])
         post["groups"] = usernameGroups[post["username"]]
-        post["calories"] = minutes * 10
+        post["calories"] = get_calories(post["exercise"], minutes)
         post["name"] = WorkoutBuddies.api.name.get_name(post["username"])[0]["firstname"]
         post["date"] = arrow.get(post['created']).humanize()
         returnPosts.append(post)
@@ -54,6 +64,8 @@ def post():
     except BaseException:
         return flask.jsonify(**{"message": "Bad Request", "status_code": 400}), 400
     connection = WorkoutBuddies.model.get_db()
+    if len(connection.execute("SELECT * FROM exercise WHERE name = ?", (data["exercise"],)).fetchall()) == 0:
+        connection.execute("INSERT INTO exercise(name, calRate) VALUES(?, 0)", (data["exercise"],))
     postCount = connection.execute("SELECT COUNT(*) FROM posts").fetchall()[0]["COUNT(*)"]
     connection.execute("INSERT INTO posts(id, username, exercise, exerciseTime, description) VALUES (?, ?, ?, ?, ?)", 
         (postCount, flask.session["username"], data["exercise"], arrow.utcnow().shift(minutes=int(data["time"])).format('YYYY-MM-DD HH:mm:ss'), data["description"]))
@@ -64,3 +76,11 @@ def post():
         "time": data["time"],
         "description": data["description"],
     })
+
+@WorkoutBuddies.app.route('/api/getExercises', methods=['GET'])
+def getExercises():
+    exercise = flask.request.args.get('query', '')
+    connection =  WorkoutBuddies.model.get_db()
+    context = {}
+    context["exercises"] = [name["name"] for name in connection.execute("SELECT name FROM exercise WHERE INSTR(name, ?) > 0", (exercise,)).fetchall()][:10]
+    return flask.jsonify(**context)
