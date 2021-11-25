@@ -212,6 +212,7 @@ module.exports = {
             this.exercise_visible = false;
             if (!this.exercise_type.includes($(exercise_type)[0].value) && $(exercise_type)[0].value != "") {
                this.new_exercise = true;
+               this.add_exercise = false;
             }
          }, 200);
       },
