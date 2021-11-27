@@ -15,15 +15,17 @@ module.exports = {
    props: ['name'],
    created: function() {
       $(document).ready(() => {
-         fetch('/api/name/', { credentials: 'same-origin' })
-         .then((response) => {
-           if (!response.ok) throw Error(response.statusText);
-           return response.json();
-         })
-         .then((data) => {
-            this.displayName = data.firstname;
-         })
-         .catch((error) => console.log(error));
+         if (name != "") {
+            fetch('/api/name/', { credentials: 'same-origin' })
+            .then((response) => {
+              if (!response.ok) throw Error(response.statusText);
+              return response.json();
+            })
+            .then((data) => {
+               this.displayName = data.firstname;
+            })
+            .catch((error) => console.log(error));
+         }
       });
    }
 };

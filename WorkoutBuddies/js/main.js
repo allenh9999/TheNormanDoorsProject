@@ -1,12 +1,15 @@
 import Vue from 'vue';
 import mainmenu from "./mainmenu";
 import mainmenudivider from './mainmenudivider';
-import feed from './feed'
+import feed from './feed';
+import mainpage from './mainpage';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
 
 Vue.component('mainmenu', mainmenu);
 Vue.component('mainmenudivider', mainmenudivider);
 Vue.component('feed', feed);
+Vue.component('mainpage', mainpage);
 
 $(document).ready(() => {
    new Vue({

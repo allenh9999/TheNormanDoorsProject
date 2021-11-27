@@ -4,5 +4,7 @@ import WorkoutBuddies
 
 @WorkoutBuddies.app.route('/', methods=['GET'])
 def main_page():
-    context = { "name": "Joe" }
+    if 'username' in flask.session:
+        return flask.redirect('/feed')
+    context = {}
     return flask.render_template("main.html", **context)
