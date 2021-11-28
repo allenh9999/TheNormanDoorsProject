@@ -31,7 +31,7 @@
          <div class="card-body">
             <span>I went </span>
             <span style="display: inline-grid">
-               <input type="text" placeholder="exercise" :style="exercise_type_style" data-bs-toggle="dropdown" @input="checkExercise()" @blur="exitExercise()" id="exercise_type"></input>
+               <input type="text" placeholder="exercise" :style="exercise_type_style" @input="checkExercise()" @blur="exitExercise()" id="exercise_type"></input>
                <ul class="dropdown-menu" style="display: block; margin-top: 30px; width: 240px" v-if="exercise_visible">
                   <template v-for="exercise in exercise_type">
                      <p class="dropdown-item" @click="changeExercise(exercise)" v-html="getBolded(exercise)">{{exercise}}</p>

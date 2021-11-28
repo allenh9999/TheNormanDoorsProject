@@ -27,3 +27,11 @@ def log_in_api():
         "status": "success",
     }
     return flask.jsonify(**context)
+
+@WorkoutBuddies.app.route('/api/logout/', methods=["GET"])
+def log_out_api():
+    if "username" not in flask.session:
+        return flask.jsonify(**{"message": "Forbidden", "status_code": 403}), 403
+    del flask.session["username"]
+    context = { "status": "success" }
+    return flask.jsonify(**context)
