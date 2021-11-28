@@ -51,7 +51,7 @@
                <br/>
                <span>This is a new exercise in our system. Do you want to add it?</span>
                <button type="button" class="btn btn-primary" v-if="add_exercise" @click="add_exercise=false">Yes</button>
-               <button type="button" class="btn btn-outline-primary" @click="add_exercise=true" v-else>No</button>
+               <button type="button" class="btn btn-outline-primary" @click="add_exercise=true" v-else>Yes</button>
             </template>
             <p>
                <span>Do you want to describe your workout?</span>

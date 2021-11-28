@@ -35,3 +35,46 @@ def log_out_api():
     del flask.session["username"]
     context = { "status": "success" }
     return flask.jsonify(**context)
+
+@WorkoutBuddies.app.route('/api/signup/', methods=["POST"])
+def signup_api():
+    if 'username' in flask.session:
+        return flask.jsonify(**{"message": "Forbidden", "status_code": 403}), 403
+    data = flask.request.get_json(force=True)
+    fields = ['username', 'firstname', 'lastname', 'email', 'password', 'weight', 'passwordCheck']
+    for field in fields:
+        if field not in data:
+            return flask.jsonify(**{"message": "Bad Request", "status_code": 400}), 400
+        if data[field] == '':
+            return flask.jsonify(**{"status": "failed", "reason": "empty field"})
+    context = {
+        "status": "failed",
+    }
+    # check username
+    connection = WorkoutBuddies.model.get_db()
+    username = connection.execute("SELECT username FROM users WHERE username = ?", (data["username"],)).fetchall()
+    if len(username) != 0:
+        context["reason"] = "username duplicate"
+        return flask.jsonify(**context)
+    for symbol in ['@', ' ']:
+        if symbol in data['username']:
+            context["reason"] = "username invalid character"
+            return flask.jsonify(**context)
+    if '@' not in data['email']:
+        context["reason"] = "invalid email"
+        return flask.jsonify(**context)
+    if data['password'] != data['passwordCheck']:
+        context['reason'] = 'passwords are not same'
+        return flask.jsonify(**context)
+    try:
+        weight = int(data['weight'])
+        if weight < 1 or weight > 2000:
+            raise ValueError("")
+    except ValueError:
+        context['reason'] = 'invalid weight'
+        return flask.jsonify(**context)
+    connection.execute("INSERT INTO users(username, firstname, lastname, email, password, weight) VALUES (?, ?, ?, ?, ?, ?)",
+        (data['username'], data['firstname'], data['lastname'], data['email'], data['password'], data['weight']))
+    context['status'] = 'success'
+    flask.session['username'] = data['username'];
+    return flask.jsonify(**context)
