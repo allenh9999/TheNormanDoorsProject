@@ -12,7 +12,16 @@
             </h2>
             <div class="accordion-collapse collapse show" id="logInCollapse" aria-labelledby="logInHeading" data-bs-parent="#mainAccordion">
                <div class="accordion-body">
-                  <p>To do</p>
+                  <div class="form-floating mb-3">
+                     <input type="email" class="form-control" id="logInEmail" placeholder="name@email.com"> <!--class invalid-->
+                     <label for="logInEmail">Email address/Username</label>
+                  </div>
+                  <div class="form-floating">
+                     <input type="password" class="form-control" id="logInPassword" placeholder="Password">
+                     <label for="logInPassword">Password</label>
+                  </div>
+                  <div style="height: 20px"></div>
+                  <button type="button" class="btn btn-outline-primary" style="width: 200px; font-size: 1.4em" @click="login()">Log in</button>
                </div>
             </div>
          </div>
@@ -24,7 +33,35 @@
             </h2>
             <div class="accordion-collapse collapse" id="signUpCollapse" aria-labelledby="signUpHeading" data-bs-parent="#mainAccordion">
                <div class="accordion-body">
-                  <p>To do</p>
+                  <div class="form-floating mb-3">
+                     <input type="text" class="form-control" id="signUpUsername" placeholder="hello">
+                     <label for="signUpUsername">Username</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                     <input type="text" class="form-control" id="signUpFirstname" placeholder="First name">
+                     <label for="signUpFirstname">First name</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                     <input type="text" class="form-control" id="signUpLastname" placeholder="Last name">
+                     <label for="signUpLastname">Last name</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                     <input type="number" class="form-control" id="signUpWeight" placeholder="Weight">
+                     <label for="signUpWeight">weight (lbs)</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                     <input type="email" class="form-control" id="signUpEmail" placeholder="Email">
+                     <label for="signUpEmail">Email</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                     <input type="password" class="form-control" id="signUpPassword" placeholder="Password">
+                     <label for="signUpPassword">Password</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                     <input type="password" class="form-control" id="signUpPasswordConfirm" placeholder="Password">
+                     <label for="signUpPasswordConfirm">Confirm password</label>
+                  </div>
+                  <button type="button" class="btn btn-outline-primary" style="width: 200px; font-size: 1.4em">Sign up</button>
                </div>
             </div>
          </div>
@@ -38,5 +75,32 @@ module.exports = {
       return {
       };
    },
+   methods: {
+      login() {
+         $(logInEmail).removeClass("is-invalid");
+         $(logInPassword).removeClass("is-invalid");
+         let sendData = {
+            username: $(logInEmail)[0].value,
+            password: $(logInPassword)[0].value,
+         };
+         fetch("/api/login/", { method: "POST", credentials: 'same-origin', body: JSON.stringify(sendData) })
+         .then((response) => {
+           if (!response.ok) throw Error(response.statusText);
+           return response.json();
+         })
+         .then((data) => {
+            if (data.status == "failed") {
+               $(logInPassword)[0].value = "";
+               $(logInPassword).addClass("is-invalid");
+               if (data.data == "username") {
+                  $(logInEmail)[0].value = "";
+                  $(logInEmail).addClass("is-invalid");
+               }
+            } else {
+               window.location.href = "/feed/";
+            }
+         });
+      }
+   }
 };
 </script>
