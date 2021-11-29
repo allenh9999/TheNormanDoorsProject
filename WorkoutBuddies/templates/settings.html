@@ -1,14 +1,13 @@
 <!DOCTYPE HTML>
 <html>
    <head>
-      <title>Welcome to Workout Buddies!</title>
+      <title>Settings</title>
    </head>
    <body>
       <div id="main">
-         <MainMenu></MainMenu>
+         <MainMenu name={{name}}></MainMenu>
          <MainMenuDivider></MainMenuDivider>
-         <MainPage></MainPage>
-         <div style="height: 100px"></div>
+         <SettingsPage></SettingsPage>
       </div>
       <script type="text/javascript" src="{{ url_for('static', filename='js/bundle.js') }}"></script>
    </body>

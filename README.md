@@ -10,6 +10,8 @@ git commit -m "commit_name.
 co-authored-by: author name <author_email>"
 ```
 ## Note for Linux/Mac computers
+### Things to install beforehand
+You need to install python, npm, and sqlite3 before doing this tutorial. Follow this tutorial in order if you want to run this project and let us know if you have any problems.
 ### Virtual Environment
 run the following commands:
 ```
@@ -24,23 +26,13 @@ source env/bin/activate
 ### Webpack
 Webpack basically bundles all the js files into one place. To install dependencies, run
 ```
-npm ci .
+npm install
 ```
 Then, run 
 ```
 npx webpack --watch
 ```
-to compile the webpack. Also lmk if you guys want any dependencies or change any names, you need to specificially add it to webpack (Allen)
-### Setting up the shell script
-Run the following command:
-```
-chmod +x bin/run.sh
-```
-to allow running the script. Then, whenever you want to run the server, type in
-```
-./bin/run.sh
-```
-to activate the server. Make sure that the environment is on 
+to compile the webpack. Note that this should be done in another terminal in the default folder because this command runs forever. 
 ### SQL 
 Run the following command:
 ```
@@ -50,3 +42,13 @@ to allow running the script. To reset or initialize the sql library, type in
 ```
 ./bin/db.sh
 ```
+### Setting up the shell script
+Run the following command:
+```
+chmod +x bin/run.sh
+```
+to allow running the script. Then, whenever you want to run the server, type in
+```
+./bin/run.sh
+```
+to activate the server. Make sure that the environment is on. To view the server, copy the link when python runs.

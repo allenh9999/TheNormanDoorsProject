@@ -61,10 +61,13 @@
                      <input type="password" class="form-control" id="signUpPasswordConfirm" placeholder="Password">
                      <label for="signUpPasswordConfirm">Confirm password</label>
                   </div>
-                  <button type="button" class="btn btn-outline-primary" style="width: 200px; font-size: 1.4em">Sign up</button>
+                  <button type="button" class="btn btn-outline-primary" style="width: 200px; font-size: 1.4em" @click="signup()">Sign up</button>
                </div>
             </div>
          </div>
+      </div>
+      <div v-if="is_error" class="alert alert-danger" style="width: 300px; position: fixed; bottom: 0px; margin-left: 45%; transform: translate(-150px, 0px); text-align: center">
+         {{error_message}}
       </div>
    </div>
 </template>
@@ -73,9 +76,18 @@
 module.exports = {
    data: function() {
       return {
+         is_error: false,
+         error_message: "",
+         error_timeout: null,
       };
    },
    methods: {
+      send_error(message) {
+         clearTimeout(this.error_timeout);
+         this.error_message = message;
+         this.is_error = true;
+         this.error_timeout = setTimeout(() => this.is_error = false, 6000);
+      },
       login() {
          $(logInEmail).removeClass("is-invalid");
          $(logInPassword).removeClass("is-invalid");
@@ -93,14 +105,71 @@ module.exports = {
                $(logInPassword)[0].value = "";
                $(logInPassword).addClass("is-invalid");
                if (data.data == "username") {
-                  $(logInEmail)[0].value = "";
                   $(logInEmail).addClass("is-invalid");
+                  this.send_error("Username is not correct");
+               } else {
+                  this.send_error("Password is not correct");
                }
             } else {
                window.location.href = "/feed/";
             }
          });
-      }
+      },
+      signup() {
+         let signUpFields = [$(signUpUsername), $(signUpFirstname), $(signUpLastname), $(signUpEmail), $(signUpPassword), $(signUpWeight), $(signUpPasswordConfirm)]
+         signUpFields.forEach((field) => {
+            field.removeClass("is-invalid");
+         });
+         let sendData = {
+            username: $(signUpUsername)[0].value,
+            firstname: $(signUpFirstname)[0].value,
+            lastname: $(signUpLastname)[0].value,
+            email: $(signUpEmail)[0].value,
+            password: $(signUpPassword)[0].value,
+            weight: $(signUpWeight)[0].value,
+            passwordCheck: $(signUpPasswordConfirm)[0].value,
+         };
+         fetch("/api/signup/", { method: "POST", credentials: 'same-origin', body: JSON.stringify(sendData) })
+         .then((response) => {
+           if (!response.ok) throw Error(response.statusText);
+           return response.json();
+         })
+         .then((data) => {
+            if (data.status == "failed") {
+               if (data.reason == "empty field") {
+                  signUpFields.forEach((field) => {
+                     if (field[0].value == '') {
+                        field.addClass('is-invalid');
+                     }
+                  });
+                  this.send_error("Fields in red are missing");
+               }
+               if (data.reason == "username duplicate") {
+                  $(signUpUsername).addClass('is-invalid');
+                  this.send_error("Username already in use");
+               }
+               if (data.reason == "username invalid character") {
+                  $(signUpUsername).addClass('is-invalid');
+                  this.send_error("Invalid username character: @ or space")
+               }
+               if (data.reason == "invalid email") {
+                  $(signUpEmail).addClass('is-invalid');
+                  this.send_error("Invalid email address");
+               }
+               if (data.reason == 'passwords are not same') {
+                  $(signUpPasswordConfirm).addClass('is-invalid');
+                  $(signUpPassword).addClass('is-invalid');
+                  this.send_error("Passwords don't match");
+               }
+               if (data.reason == 'invalid weight') {
+                  $(signUpWeight).addClass('is-invalid');
+                  this.send_error("Invalid weight");
+               }
+            } else {
+               window.location.href = "/feed/";
+            }
+         });
+      },
    }
 };
 </script>

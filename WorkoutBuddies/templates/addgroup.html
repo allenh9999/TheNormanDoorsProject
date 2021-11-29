@@ -1,14 +1,13 @@
 <!DOCTYPE HTML>
 <html>
    <head>
-      <title>Welcome to Workout Buddies!</title>
+      <title>Add Group</title>
    </head>
    <body>
       <div id="main">
-         <MainMenu></MainMenu>
+         <MainMenu name={{name}} style="z-index:10"></MainMenu>
          <MainMenuDivider></MainMenuDivider>
-         <MainPage></MainPage>
-         <div style="height: 100px"></div>
+         <Addgroup></Addgroup>
       </div>
       <script type="text/javascript" src="{{ url_for('static', filename='js/bundle.js') }}"></script>
    </body>
