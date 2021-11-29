@@ -229,9 +229,9 @@ module.exports = {
       
       addNewGroup() {
          if (this.add_existing_group) {
-            window.location.href = "/group/add";
+            window.location.href = "/addgroup";
          } else {
-            window.location.href = "/group/create";
+            window.location.href = "/creategroup";
          }
       }
    },

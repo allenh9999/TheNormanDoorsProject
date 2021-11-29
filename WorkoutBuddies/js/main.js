@@ -10,6 +10,7 @@ Vue.component('mainmenu', mainmenu);
 Vue.component('mainmenudivider', mainmenudivider);
 Vue.component('feed', feed);
 Vue.component('mainpage', mainpage);
+Vue.component('creategroup',creategroup)
 
 $(document).ready(() => {
    new Vue({
