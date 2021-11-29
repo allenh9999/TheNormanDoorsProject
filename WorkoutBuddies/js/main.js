@@ -7,6 +7,7 @@ import addgroup from './addgroup';
 import mainpage from './mainpage';
 import settingspage from './settingspage';
 import settingsitem from './settingsitem';
+import userinfo from './userinfo';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 
@@ -18,6 +19,7 @@ Vue.component('creategroup',creategroup);
 Vue.component('addgroup',addgroup);
 Vue.component('settingspage', settingspage);
 Vue.component('settingsitem', settingsitem);
+Vue.component('userinfo', userinfo);
 
 $(document).ready(() => {
    new Vue({
