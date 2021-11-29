@@ -41,12 +41,14 @@ module.exports = {
             name: $(createName)[0].value,
             password: $(createPassword)[0].value,
          };
+         console.log(sendData);
          fetch("/api/create/", { method: "POST", credentials: 'same-origin', body: JSON.stringify(sendData) })
          .then((response) => {
            if (!response.ok) throw Error(response.statusText);
            return response.json();
          })
          .then((data) => {
+            console.log(data);
             if (data.status == "failed") {
                $(createPassword)[0].value = "";
                $(createPassword).addClass("is-invalid");

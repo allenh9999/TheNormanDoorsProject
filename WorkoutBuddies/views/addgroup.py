@@ -3,7 +3,7 @@ import WorkoutBuddies
 
 
 @WorkoutBuddies.app.route('/addgroup/', methods=['GET'])
-def feed_page():
+def add_group():
     if 'username' not in flask.session:
         return flask.redirect('/') # flask.session.clear() to clear cookies
     

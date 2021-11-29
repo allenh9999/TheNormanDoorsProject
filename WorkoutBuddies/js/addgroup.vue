@@ -5,7 +5,7 @@
          <div class="accordion-item">
             <h2 class="accordion-header" id="addHeading">
                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#addCollapse" aria-expanded="true" aria-controls="addCollapse" style="font-size: 0.7em">
-                  Create Group
+                  Add Group
                </button>
             </h2>
             <div class="accordion-collapse collapse show" id="addCollapse" aria-labelledby="addHeading" data-bs-parent="#mainAccordion">
