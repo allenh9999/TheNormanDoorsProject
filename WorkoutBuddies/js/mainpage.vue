@@ -148,6 +148,10 @@ module.exports = {
                   $(signUpUsername).addClass('is-invalid');
                   this.send_error("Username already in use");
                }
+               if (data.reason == 'email duplicate') {
+                  $(signUpEmail).addClass('is-invalid');
+                  this.send_error("Email already in use");
+               }
                if (data.reason == "username invalid character") {
                   $(signUpUsername).addClass('is-invalid');
                   this.send_error("Invalid username character: @ or space")

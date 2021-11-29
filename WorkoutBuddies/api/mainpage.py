@@ -63,6 +63,10 @@ def signup_api():
     if '@' not in data['email']:
         context["reason"] = "invalid email"
         return flask.jsonify(**context)
+    email = connection.execute('SELECT email FROM users WHERE email = ?', (data['email'],)).fetchall()
+    if len(email) != 0:
+        context['reason'] = 'email duplicate'
+        return flask.jsonify(**context)
     if data['password'] != data['passwordCheck']:
         context['reason'] = 'passwords are not same'
         return flask.jsonify(**context)
