@@ -29,10 +29,13 @@
             </div>
          </template>
       </div>
-      <settingsitem setting="weight" type="number" :value="user_details.weight" @value="updateWeight"></settingsitem>
-      <settingsitem setting="first name" type="text" :value="user_details.firstname" @value="updateFirstname"></settingsitem>
-      <settingsitem setting="last name" type="text" :value="user_details.lastname" @value="updateLastname"></settingsitem>
-      <settingsitem setting="email" type="text" :value="user_details.email" @value="updateEmail"></settingsitem>
+      <settingsitem setting="weight" type="number" :value="user_details.weight" @value="updateWeight" @error="sendError"></settingsitem>
+      <settingsitem setting="first name" type="text" :value="user_details.firstname" @value="updateFirstname" @error="sendError"></settingsitem>
+      <settingsitem setting="last name" type="text" :value="user_details.lastname" @value="updateLastname" @error="sendError"></settingsitem>
+      <settingsitem setting="email" type="text" :value="user_details.email" @value="updateEmail" @error="sendError"></settingsitem>
+      <div v-if="is_error" class="alert alert-danger" style="width: 300px; position: fixed; bottom: 0px; margin-left: 45%; transform: translate(-150px, 0px); text-align: center">
+         {{error_message}}
+      </div>
    </div>
 </template>
 
@@ -44,10 +47,19 @@ module.exports = {
          user_details: {
             username: '',
             weight: 0,
-         }
+         },
+         is_error: false,
+         error_message: "",
+         error_timeout: null,
       };
    },
    methods: {
+      sendError(message) {
+         clearTimeout(this.error_timeout);
+         this.error_message = message;
+         this.is_error = true;
+         this.error_timeout = setTimeout(() => this.is_error = false, 6000);
+      },
       setPassword() {
          $(password).removeClass('is-invalid');
          $(passwordOld).removeClass('is-invalid');
@@ -66,12 +78,19 @@ module.exports = {
          .then((data) => {
             if (data.status == "failed") {
                if (data.reason == "Blank field") {
-                  $(password).addClass('is-invalid');
+                  [$(password), $(passwordConfirm), $(passwordOld)].forEach((object) => {
+                     if (object[0].value == "") {
+                        object.addClass('is-invalid');
+                     }
+                  });
+                  this.sendError("Some fields are blank");
                } else if (data.reason == "passwords do not match") {
                   $(password).addClass('is-invalid');
                   $(passwordConfirm).addClass('is-invalid');
+                  this.sendError("Passwords don't match");
                } else {
                   $(passwordOld).addClass('is-invalid');
+                  this.sendError("Old password is wrong");
                }
             }
          });

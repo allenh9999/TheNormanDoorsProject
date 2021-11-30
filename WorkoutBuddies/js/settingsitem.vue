@@ -38,6 +38,7 @@ module.exports = {
          .then((data) => {
             if (data.status == "failed") {
                document.getElementById(this.setting).classList.add("is-invalid");
+               this.$emit("error", "The field in red is blank");
             } else {
                this.$emit("value", data.value);
             }

@@ -1,9 +1,9 @@
 <template>
-   <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: center">
+   <div style="width: 90%; margin-left: auto; margin-right: auto;">
         <h1 style="text-decoration: underline; text-decoration-color: blue; font-size: 4em;">{{displayName}}'s Stats</h1>
         <p style="font-size: 1.5em">Account Created: {{creation_date}}</p>
-        <p style="font-size: 1.5em">Calories Burned: {{total_cal}}</p>
-        <p style="font-size: 1.5em">Minutes Spent: {{total_min}}</p>
+        <p style="font-size: 1.5em">Calories Burned: <numberdisplay :target="total_cal" style="font-size: 1em"></numberdisplay></p>
+        <p style="font-size: 1.5em">Minutes Spent Exercising: <numberdisplay :target="total_min" style="font-size: 1em"></numberdisplay></p>
     </div>
 </template>
 

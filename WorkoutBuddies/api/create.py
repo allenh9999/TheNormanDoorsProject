@@ -20,6 +20,13 @@ def create_group_api():
             "data": "password"
         }
         return flask.jsonify(**context)
+    group = connection.execute("SELECT * FROM groups WHERE name = ?", (data['name'],)).fetchall()
+    if len(group) > 0:
+        context = {
+            "status": "failed",
+            "data": "duplicate"
+        }
+        return flask.jsonify(**context)
     #flask.session['name'] = name[0]['name'];
     context = {
         "status": "success",
@@ -51,5 +58,12 @@ def add_group_api():
     context = {
         "status": "success",
     }
+    check_existing = connection.execute("SELECT * FROM in_group WHERE username = ? AND groupname = ?", (flask.session['username'], data['name'])).fetchall()
+    if len(check_existing) > 0:
+        context = {
+            "status": "failed",
+            "data": "already in group"
+        }
+        return flask.jsonify(**context)
     connection.execute("INSERT into in_group(username,groupname) values (?,?)",(flask.session['username'],data['name']))
     return flask.jsonify(**context)

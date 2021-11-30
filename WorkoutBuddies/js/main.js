@@ -8,6 +8,7 @@ import mainpage from './mainpage';
 import settingspage from './settingspage';
 import settingsitem from './settingsitem';
 import userinfo from './userinfo';
+import numberdisplay from './numberdisplay';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 
@@ -20,6 +21,7 @@ Vue.component('addgroup',addgroup);
 Vue.component('settingspage', settingspage);
 Vue.component('settingsitem', settingsitem);
 Vue.component('userinfo', userinfo);
+Vue.component('numberdisplay', numberdisplay);
 
 $(document).ready(() => {
    new Vue({
