@@ -7,13 +7,6 @@ def create_group_api():
     data = flask.request.get_json(force=True)
     if 'name' not in data:
         return flask.jsonify(**{"message": "Bad Request", "status_code": 400}), 400
-    name = connection.execute("SELECT password, username FROM users WHERE username = ?", (data['name'],)).fetchall()
-    if len(name) > 0:
-        context = {
-            "status": "failed",
-            "data": "name"
-        }
-        return flask.jsonify(**context)
     if "password" not in data or len(data['password']) < 1:
         context = {
             "status": "failed",
@@ -25,6 +18,12 @@ def create_group_api():
         context = {
             "status": "failed",
             "data": "duplicate"
+        }
+        return flask.jsonify(**context)
+    if len(data['name']) < 1:
+        context = {
+            "status": "failed",
+            "data": "blank"
         }
         return flask.jsonify(**context)
     #flask.session['name'] = name[0]['name'];

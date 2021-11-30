@@ -2,27 +2,21 @@
    
    <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: center">
       <div style="height: 20px"></div>
-      <div class="accordion" style="width: 50%; margin-left: auto; margin-right: auto" id="mainAccordion">
-         <div class="accordion-item">
-            <h2 class="accordion-header" id="createHeading">
-               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#createCollapse" aria-expanded="true" aria-controls="createCollapse" style="font-size: 0.7em">
-                  Create a group!
-               </button>
-            </h2>
-            <div class="accordion-collapse collapse show" id="createCollapse" aria-labelledby="logInHeading" data-bs-parent="#mainAccordion">
-               <div class="accordion-body">
-                  <div class="form-floating mb-3">
-                     <input type="name" class="form-control" id="createName" placeholder="Name"> <!--class invalid-->
-                     <label for="createName">Group Name</label>
-                  </div>
-                  <div class="form-floating">
-                     <input type="password" class="form-control" id="createPassword" placeholder="Password">
-                     <label for="createPassword">Password</label>
-                  </div>
-                  <div style="height: 20px"></div>
-                  <button type="button" class="btn btn-outline-primary" style="width: 200px; font-size: 1.4em" @click="create()">Create</button>
-               </div>
+      <div class="card" style="width: 50%; margin-left: auto; margin-right: auto" id="mainAccordion">
+         <div class="card-header">
+            <h2>Create a group!</h2>
+         </div>
+         <div class="card-body">
+            <div class="form-floating mb-3">
+               <input type="name" class="form-control" id="createName" placeholder="Name"> <!--class invalid-->
+               <label for="createName">Group Name</label>
             </div>
+            <div class="form-floating">
+               <input type="password" class="form-control" id="createPassword" placeholder="Password">
+               <label for="createPassword">Password</label>
+            </div>
+            <div style="height: 20px"></div>
+            <button type="button" class="btn btn-outline-primary" style="width: 200px; font-size: 1.4em" @click="create()">Create</button>
          </div>
       </div>
       <div v-if="is_error" class="alert alert-danger" style="width: 300px; position: fixed; bottom: 0px; margin-left: 45%; transform: translate(-150px, 0px); text-align: center">
@@ -61,7 +55,7 @@ module.exports = {
          })
          .then((data) => {
             if (data.status == "failed") {
-               if (data.data == "name") {
+               if (data.data == "blank") {
                   $(createName).addClass("is-invalid");
                   this.send_error("The name needs to be longer");
                } else if (data.data == "password") {
