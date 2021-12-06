@@ -37,7 +37,7 @@ def get_feed_api():
         post["groups"] = usernameGroups[post["username"]]
         post["calories"] = get_calories(post["exercise"], minutes)
         post["name"] = WorkoutBuddies.api.name.get_name(post["username"])[0]["firstname"]
-        post["date"] = arrow.get(post['created']).humanize()
+        post["date"] = arrow.get(post['created']).humanize().capitalize()
         returnPosts.append(post)
         for group in usernameGroups[post["username"]]:
             if group in userGroups:

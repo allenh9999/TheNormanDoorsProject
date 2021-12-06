@@ -62,12 +62,13 @@
          </div>
       </div>
       <template v-for="post in posts">
-         <template v-if="post.groups.filter(group => selected_groups.has(group)).length != 0">
+         <template v-if="post.groups.filter(group => selected_groups.has(group)).length != 0 || post.username == name">
             <div style="height: 20px;"></div>
             <div class="card" style="width: 90%; margin-left: auto; margin-right: auto">
                <div class="card-header">
+                  <span> {{post.date}}, </span>
                   <a class="nav-link" style="display: inline; padding: 0px;" :href="'/u/' + post.username + '/'">{{post.name}}</a>
-                  <span> went {{post.exercise}} for {{post.time}} {{post.date}}</span>
+                  <span> went {{post.exercise}} for {{post.time}}.</span>
                   <span style="float: right;">{{post.calories}} calories</span>
                </div>
                <div class="card-body">
