@@ -43,7 +43,8 @@ def get_feed_api():
             if group in userGroups:
                 break
         else:
-            returnPosts.pop()
+            if post["username"] != flask.session["username"]:
+                returnPosts.pop()
     returnPosts.reverse()
     context["posts"] = returnPosts
     context["groups"] = list(userGroups)
