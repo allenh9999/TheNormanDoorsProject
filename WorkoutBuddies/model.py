@@ -3,13 +3,17 @@ import sqlite3
 import flask
 import WorkoutBuddies
 
+
 def get_db():
     if 'sqlite_db' not in flask.g:
-        flask.g.sqlite_db = sqlite3.connect(str(WorkoutBuddies.app.config['DATABASE_FILENAME']))
-        flask.g.sqlite_db.row_factory = lambda cursor, row : {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
+        flask.g.sqlite_db = sqlite3.connect(
+            str(WorkoutBuddies.app.config['DATABASE_FILENAME']))
+        flask.g.sqlite_db.row_factory = lambda cursor, row: {
+            col[0]: row[idx] for idx, col in enumerate(cursor.description)}
         flask.g.sqlite_db.execute("PRAGMA foreign_keys = ON")
 
     return flask.g.sqlite_db
+
 
 @WorkoutBuddies.app.teardown_appcontext
 def close_db(error):
